@@ -1,2 +1,1 @@
-# Stokio
-# proyecto de daw
+# proyecto
