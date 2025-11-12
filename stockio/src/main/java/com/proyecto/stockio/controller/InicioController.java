@@ -2,19 +2,29 @@ package com.proyecto.stockio.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class InicioController {
 
     @GetMapping("/")
     public String inicio() {
-        // Carga el index.html que está en src/main/resources/static/
-        return "/index";
+        return "index"; // asegúrate de tener templates/index.html
     }
 
     @GetMapping("/login")
     public String login() {
-        // Cuando tengas login.html en static/
-        return "/login";
+        return "login"; // templates/login.html (aunque esté vacío)
+    }
+
+    @PostMapping("/login")
+    public String loginPost() {
+        // simulación temporal de login
+        return "redirect:/panel";
+    }
+
+    @GetMapping("/panel")
+    public String panel() {
+        return "panel"; // templates/panel.html
     }
 }
