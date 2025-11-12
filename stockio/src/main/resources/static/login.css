@@ -44,7 +44,7 @@ body {
 
     .btn {
       width: 100%;
-      background-color: #007bff;
+      background-color: #45a049;
       color: white;
       padding: 12px;
       border: none;
@@ -55,7 +55,8 @@ body {
     }
 
     .btn:hover {
-      background-color: #005fc3;
+    background-color: #45a049;
+
     }
 
     .volver {

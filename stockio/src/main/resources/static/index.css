@@ -21,7 +21,8 @@
 
     .btn {
       padding: 12px 20px;
-      background-color: #007bff;
+     background-color: #45a049;
+
       color: white;
       text-decoration: none;
       border-radius: 6px;
@@ -29,5 +30,6 @@
     }
 
     .btn:hover {
-      background-color: #005fc3;
+    background-color: #45a049;
+
     }
