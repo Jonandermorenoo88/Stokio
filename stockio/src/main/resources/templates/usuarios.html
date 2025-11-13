@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/usuarios.css">
+    <title>Gestión de Usuarios</title>
+</head>
+<body>
+<h1>Gestión de Usuarios</h1>
+
+<form th:action="@{/usuarios/guardar}" method="post">
+    <input type="text" name="nombre" placeholder="Nombre" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input type="password" name="password" placeholder="Contraseña" required />
+    <select name="rol">
+        <option value="USUARIO">Usuario</option>
+        <option value="ADMIN">Administrador</option>
+    </select>
+    <button type="submit">Guardar</button>
+</form>
+
+<h2>Lista de usuarios</h2>
+<table border="1">
+    <tr>
+        <th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
+    </tr>
+    <tr th:each="u : ${usuarios}">
+        <td th:text="${u.id}"></td>
+        <td th:text="${u.nombre}"></td>
+        <td th:text="${u.email}"></td>
+        <td th:text="${u.rol}"></td>
+        <td>
+            <a th:href="@{'/usuarios/eliminar/' + ${u.id}}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

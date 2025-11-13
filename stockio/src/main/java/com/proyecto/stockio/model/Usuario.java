@@ -22,7 +22,7 @@ public class Usuario {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> rol = new HashSet<>();
 
     // ====== Getters y Setters ======
 
@@ -54,10 +54,10 @@ public class Usuario {
         this.pasword = pasword;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public Set<Role> getRol() {
+        return rol;
     }
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRol(Set<Role> roles) {
+        this.rol = roles;
     }
 }

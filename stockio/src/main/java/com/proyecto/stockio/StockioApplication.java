@@ -27,7 +27,7 @@ public class StockioApplication {
                 admin.setEmail(adminEmail);
                 admin.setNombre("Administrador");
                 admin.setPassword("admin123");
-                admin.setRoles(Set.of(Role.ADMIN));
+                admin.setRol(Set.of(Role.ADMIN));
                 usuarioRepository.save(admin);
                 System.out.println("✅ ADMIN creado: " + adminEmail + " / admin123 (SIN CODIFICAR)");
             } else {
