@@ -16,14 +16,17 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
+    @SuppressWarnings("null")
     public void guardarUsuario(Usuario usuario) {
         usuarioRepository.save(usuario);
     }
 
+    @SuppressWarnings("null")
     public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }
 
+    @SuppressWarnings("null")
     public Usuario obtenerPorId(Long id) {
         return usuarioRepository.findById(id).orElse(null);
     }
