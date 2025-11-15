@@ -8,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -17,33 +15,53 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    // LISTAR USUARIOS
     @GetMapping
     public String listarUsuarios(Model model) {
         model.addAttribute("usuarios", usuarioService.listarUsuarios());
-        return "usuarios";
+        return "usuarios";  // usuarios.html
     }
 
+    // GUARDAR USUARIO (desde registro)
     @PostMapping("/guardar")
     public String guardarUsuario(@ModelAttribute Usuario usuario) {
-        // aquí el usuario viene sin rol desde registro
-        // opcional: podrías dejarlo sin rol o poner por defecto USUARIO
         usuarioService.guardarUsuario(usuario);
         return "redirect:/login";
     }
 
+    // ACTUALIZAR ROL
     @PostMapping("/actualizarRol")
     public String actualizarRol(@RequestParam Long id,
-                                @RequestParam Role rol) {
+                                @RequestParam String rol) {
 
         Usuario usuario = usuarioService.obtenerPorId(id);
-        if (usuario != null) {
-            usuario.setRol(Set.of(rol));
-            usuarioService.guardarUsuario(usuario);
+        if (usuario == null) {
+            return "redirect:/usuarios";
         }
+
+        // Determinar el rol nuevo
+        Role nuevoRol = null;
+        if ("ADMIN".equalsIgnoreCase(rol)) {
+            nuevoRol = Role.ADMIN;
+        } else if ("USUARIO".equalsIgnoreCase(rol)) {
+            nuevoRol = Role.USUARIO;
+        }
+
+        if (nuevoRol == null) {
+            return "redirect:/usuarios";
+        }
+
+        // 💥 IMPORTANTE: trabajar con el Set mutable que ya tiene el usuario
+        usuario.getRol().clear();        // vaciamos los roles anteriores
+        usuario.getRol().add(nuevoRol);  // añadimos el nuevo rol
+
+        usuarioService.guardarUsuario(usuario);
 
         return "redirect:/usuarios";
     }
 
+
+    // ELIMINAR
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);

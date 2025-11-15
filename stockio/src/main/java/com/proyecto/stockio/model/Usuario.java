@@ -15,10 +15,11 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
-    private String pasword;
+    private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
@@ -48,10 +49,10 @@ public class Usuario {
     }
 
     public String getPassword() {
-        return pasword;
+        return password;
     }
-    public void setPassword(String pasword) {
-        this.pasword = pasword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<Role> getRol() {

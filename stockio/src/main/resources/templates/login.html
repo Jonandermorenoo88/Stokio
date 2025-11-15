@@ -12,6 +12,9 @@
   <div class="login-container">
     <h2>Iniciar sesión</h2>
 
+    <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+    <p th:if="${info}" th:text="${info}" style="color:orange;"></p>
+
     <form action="/login" method="post">
       <div class="form-group">
         <label for="email">Correo electrónico</label>
