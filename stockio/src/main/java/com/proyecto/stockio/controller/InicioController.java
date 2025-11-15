@@ -27,4 +27,10 @@ public class InicioController {
     public String panel() {
         return "panel"; // templates/panel.html
     }
+
+    @GetMapping("/registro")
+    public String registro() {
+        return "registro"; // templates/registro.html
+    }
+
 }
