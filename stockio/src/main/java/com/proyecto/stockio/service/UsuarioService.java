@@ -40,5 +40,4 @@ public class UsuarioService {
     public Optional<Usuario> obtenerPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
-
 }
