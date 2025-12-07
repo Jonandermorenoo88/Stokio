@@ -66,24 +66,24 @@
                 <th>ID</th>
                 <th>Nombre Almacén</th>
                 <th>Ubicación</th>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
+                <th>Cantidad Total de Productos</th>
+                <th>Valor Total</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="almacen : ${almacenes}">
-                <td th:text="${almacen.id}"></td>
-                <td th:text="${almacen.nombre}"></td>
-                <td th:text="${almacen.ubicacion}"></td>
-                <td th:text="${almacen.producto != null} ? ${almacen.producto.nombre} : 'Sin Producto'"></td>
-                <td th:text="${almacen.precio}"></td>
-                <td th:text="${almacen.cantidad}"></td>
+            <tr th:each="dto : ${almacenes}">
+                <td th:text="${dto.almacen.id}"></td>
+                <td th:text="${dto.almacen.nombre}"></td>
+                <td th:text="${dto.almacen.ubicacion}"></td>
+                <td th:text="${dto.totalCantidad}"></td>
+                <td th:text="${dto.totalValor}"></td>
                 <td class="actions">
-                    <a th:href="@{/almacenes/editar/{id}(id=${almacen.id})}" class="btn">Editar</a>
-                    <a th:href="@{/almacenes/eliminar/{id}(id=${almacen.id})}" class="btn btn-danger"
-                        onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                    <a th:href="@{/almacenes/{id}(id=${dto.almacen.id})}" class="btn btn-primary"
+                        style="margin-right: 5px;">Entrar</a>
+                    <a th:href="@{/almacenes/editar/{id}(id=${dto.almacen.id})}" class="btn">Editar</a>
+                    <a th:href="@{/almacenes/eliminar/{id}(id=${dto.almacen.id})}" class="btn btn-danger"
+                        onclick="return confirm('¿Estás seguro? Se borrará el almacén.');">Eliminar</a>
                 </td>
             </tr>
         </tbody>

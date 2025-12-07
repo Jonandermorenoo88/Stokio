@@ -1,7 +1,7 @@
 package com.proyecto.stockio.controller;
 
 import com.proyecto.stockio.model.Producto;
-import com.proyecto.stockio.repository.ProductoRepository;
+// import com.proyecto.stockio.repository.ProductoRepository; // Removed unused import
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class ProductoController {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private com.proyecto.stockio.service.ProductoService productoService;
 
     @GetMapping
     public String listarProductos(Model model) {
-        model.addAttribute("productos", productoRepository.findAll());
+        model.addAttribute("productos", productoService.listarProductos());
         return "productos/index";
     }
 
@@ -28,21 +28,23 @@ public class ProductoController {
 
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto) {
-        productoRepository.save(producto);
+        productoService.guardarProducto(producto);
         return "redirect:/productos";
     }
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
-        Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID de producto inválido: " + id));
+        Producto producto = productoService.obtenerPorId(id);
+        if (producto == null) {
+            throw new IllegalArgumentException("ID de producto inválido: " + id);
+        }
         model.addAttribute("producto", producto);
         return "productos/form";
     }
 
     @GetMapping("/eliminar/{id}")
     public String eliminarProducto(@PathVariable Long id) {
-        productoRepository.deleteById(id);
+        productoService.eliminarProducto(id);
         return "redirect:/productos";
     }
 }

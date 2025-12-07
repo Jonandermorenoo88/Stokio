@@ -15,23 +15,12 @@ public class Almacen {
 
     private String ubicacion; // ubicación
 
-    @ManyToOne
-    @JoinColumn(name = "producto_id")
-    private Producto producto; // producto
-
-    private Double precio; // precio (especifico del almacén?)
-
-    private Integer cantidad; // cantidad
-
     public Almacen() {
     }
 
-    public Almacen(String nombre, String ubicacion, Producto producto, Double precio, Integer cantidad) {
+    public Almacen(String nombre, String ubicacion) {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
-        this.producto = producto;
-        this.precio = precio;
-        this.cantidad = cantidad;
     }
 
     // Getters y Setters
@@ -58,29 +47,5 @@ public class Almacen {
 
     public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
-    }
-
-    public Producto getProducto() {
-        return producto;
-    }
-
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
-    public Integer getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
     }
 }
