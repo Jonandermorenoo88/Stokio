@@ -28,7 +28,9 @@ public class UsuarioService {
     }
 
     public void eliminarUsuario(Long id) {
-        usuarioRepository.deleteById(id);
+        if (id != null) {
+            usuarioRepository.deleteById(id);
+        }
     }
 
     public Usuario obtenerPorId(Long id) {
