@@ -62,7 +62,7 @@
         <p th:text="${param.error}">Error</p>
     </div>
 
-    <form action="/movimientos/ventas/guardar" method="post">
+    <form th:action="@{/movimientos/ventas/guardar}" method="post">
 
         <div class="form-group">
             <label for="almacenId">Almacén de Origen:</label>

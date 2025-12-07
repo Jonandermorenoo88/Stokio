@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="'Detalle de ' + ${almacen.nombre}">Detalle Almacén</title>
+    <title th:text="'Categorías del Almacén: ' + ${almacen.nombre}">Categorías del Almacén</title>
     <style>
         body {
             font-family: sans-serif;
@@ -42,101 +42,62 @@
             border: none;
         }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
         }
 
-        .add-stock-form {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-            border: 1px solid #dee2e6;
-        }
-
-        .add-stock-form h3 {
-            margin-top: 0;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
+        .actions {
+            white-space: nowrap;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="header">
-        <h1>
-            <span th:text="${almacen.nombre}">Nombre Almacén</span>
-            <small style="color: gray; font-size: 0.6em;" th:text="'(' + ${almacen.ubicacion} + ')'"></small>
-        </h1>
-        <a href="/almacenes" class="btn">Volver a la lista</a>
+    <h1 th:text="'Categorías del Almacén: ' + ${almacen.nombre}">Categorías del Almacén</h1>
+    <h4 style="color: gray; margin-top: -15px;" th:text="${almacen.ubicacion}">Ubicación</h4>
+
+    <!-- Botonera superior like index.html -->
+    <a th:href="@{/categorias/nueva(almacenId=${almacen.id})}" class="btn btn-primary">Nueva Categoría</a>
+    <a href="/almacenes" class="btn">Volver a Almacenes</a>
+
+    <!-- Lista de Inventario Agrupada -->
+    <div th:if="${esVacio}" style="text-align: center; margin-top: 50px;">
+        <p>Este almacén no tiene categorías registradas aún.</p>
+        <p>¡Crea la primera categoría para empezar!</p>
     </div>
 
-    <!-- Lista de Inventario -->
-    <h2>Inventario</h2>
-    <table>
+    <!-- Tabla Resumen de Categorías -->
+    <table th:unless="${esVacio}">
         <thead>
             <tr>
-                <th>Producto</th>
-                <th>Categoría</th>
-                <th>Cantidad</th>
-                <th>Precio Unitario</th>
-                <th>Valor Total</th>
-                <th>Última Actualización</th>
+                <th>Nombre de Categoría</th>
+                <th>Producto Diferentes</th>
+                <th>Total Productos (unidades)</th>
+                <th>Valor Total Stock</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:if="${inventario.empty}">
-                <td colspan="6" style="text-align: center;">Este almacén está vacío.</td>
-            </tr>
-            <tr th:each="item : ${inventario}">
-                <td>
-                    <a th:href="@{/productos/editar/{id}(id=${item.producto.id})}"
-                        th:text="${item.producto.nombre}"></a>
+            <tr th:each="cat : ${categorias}">
+                <td th:text="${cat.nombre}"></td>
+                <td>-</td>
+                <!-- Placeholder for 'number of distinct products' if available, otherwise just remove or put - -->
+                <td th:text="${cat.cantidadTotal}"></td>
+                <td th:text="${#numbers.formatDecimal(cat.valorTotal, 1, 2) + ' €'}"></td>
+                <td class="actions">
+                    <!-- Botón Entrar: Redirige a la vista detallada de esa categoría -->
+                    <a th:href="@{/almacenes/{id}/categoria(id=${almacen.id}, nombre=${cat.nombre})}"
+                        class="btn btn-primary" style="margin-right: 5px;">Entrar</a>
+                    <!-- Placeholder buttons acting as if they exist, for UI consistency -->
+                    <button class="btn" disabled style="opacity: 0.5;">Editar</button>
+                    <button class="btn btn-danger" disabled style="opacity: 0.5;">Eliminar</button>
                 </td>
-                <td th:text="${item.producto.categoria}"></td>
-                <td th:text="${item.cantidad}"></td>
-                <td th:text="${item.producto.precio}"></td>
-                <td th:text="${item.cantidad * (item.producto.precio != null ? item.producto.precio : 0)}"></td>
-                <td th:text="${#temporals.format(item.ultimaActualizacion, 'dd-MM-yyyy HH:mm')}"></td>
             </tr>
         </tbody>
     </table>
-
-    <!-- Formulario para añadir stock -->
-    <div class="add-stock-form">
-        <h3>Añadir Stock al Almacén</h3>
-        <form th:action="@{/almacenes/{id}/agregarProducto(id=${almacen.id})}" method="post">
-            <div class="form-row">
-                <div class="form-group" style="flex-grow: 1;">
-                    <label>Producto:</label>
-                    <select name="productoId" required style="padding: 5px;">
-                        <option value="">-- Seleccionar --</option>
-                        <option th:each="p : ${todosLosProductos}" th:value="${p.id}"
-                            th:text="${p.nombre} + ' (Ref: ' + ${p.id} + ')'"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Cantidad a añadir:</label>
-                    <input type="number" name="cantidad" value="1" min="1" required style="padding: 5px; width: 100px;">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Añadir</button>
-            </div>
-        </form>
-    </div>
 
 </body>
 

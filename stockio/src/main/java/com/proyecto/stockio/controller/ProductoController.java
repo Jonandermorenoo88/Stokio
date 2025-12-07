@@ -1,7 +1,7 @@
 package com.proyecto.stockio.controller;
 
 import com.proyecto.stockio.model.Producto;
-// import com.proyecto.stockio.repository.ProductoRepository; // Removed unused import
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +13,14 @@ public class ProductoController {
 
     @Autowired
     private com.proyecto.stockio.service.ProductoService productoService;
+
+    @Autowired
+    private com.proyecto.stockio.repository.CategoriaRepository categoriaRepository;
+
+    @ModelAttribute("categorias")
+    public java.util.List<com.proyecto.stockio.model.Categoria> populateCategorias() {
+        return categoriaRepository.findAll();
+    }
 
     @GetMapping
     public String listarProductos(Model model) {

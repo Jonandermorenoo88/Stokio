@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Categoría: ' + ${nombreCategoria}">Categoría</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            background: #eee;
+            color: black;
+            cursor: pointer;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>
+            <span th:text="${nombreCategoria}">Categoría</span>
+            <small style="color: gray; font-size: 0.6em;" th:text="' - ' + ${almacen.nombre}"></small>
+        </h1>
+        <a th:href="@{/almacenes/{id}(id=${almacen.id})}" class="btn">Volver al Almacén</a>
+    </div>
+
+    <!-- Lista de Productos -->
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Valor Total</th>
+                <th>Última Actualización</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${productos.empty}">
+                <td colspan="5" style="text-align: center;">No hay productos en esta categoría.</td>
+            </tr>
+            <tr th:each="item : ${productos}">
+                <td>
+                    <a th:href="@{/productos/editar/{id}(id=${item.producto.id})}"
+                        th:text="${item.producto.nombre}"></a>
+                </td>
+                <td th:text="${item.cantidad}"></td>
+                <td th:text="${item.producto.precio}"></td>
+                <td th:text="${item.cantidad * (item.producto.precio != null ? item.producto.precio : 0)}"></td>
+                <td th:text="${#temporals.format(item.ultimaActualizacion, 'dd-MM-yyyy HH:mm')}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="add-stock-form"
+        style="margin-top: 20px; background: #f8f9fa; padding: 15px; border: 1px solid #dee2e6;">
+        <h3 th:text="'Añadir ' + ${nombreCategoria} + ' al Almacén'">Añadir Stock</h3>
+        <form th:action="@{/almacenes/{id}/agregarProducto(id=${almacen.id})}" method="post">
+            <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <div style="flex-grow: 1;">
+                    <label for="producto">Producto:</label>
+                    <select name="productoId" id="producto" required style="width: 100%; padding: 5px;">
+                        <option value="" disabled selected>Seleccione un producto...</option>
+                        <option th:each="p : ${productosDisponibles}" th:value="${p.id}" th:text="${p.nombre}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" name="cantidad" id="cantidad" required min="1" value="1"
+                        style="padding: 5px; width: 80px;">
+                </div>
+                <button type="submit" class="btn"
+                    style="background-color: #007bff; color: white; border: none; padding: 8px 15px;">Añadir</button>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.9em;">
+                ¿No encuentras el producto?
+                <a href="/productos/nuevo" target="_blank">Crear nuevo tipo de producto</a>
+                (asegúrate de asignarle la categoría <strong th:text="${nombreCategoria}"></strong>).
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

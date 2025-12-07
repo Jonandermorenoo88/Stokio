@@ -26,11 +26,15 @@ public class MovimientoController {
     @Autowired
     private AlbaranService albaranService;
 
+    @Autowired
+    private com.proyecto.stockio.repository.CategoriaRepository categoriaRepository;
+
     // --- COMPRA (ENTRADA) ---
     @GetMapping("/compras/nueva")
     public String nuevaCompra(Model model) {
         model.addAttribute("almacenes", almacenRepository.findAll());
         model.addAttribute("productos", productoService.listarProductos()); // Mostrar todos para comprar
+        model.addAttribute("categorias", categoriaRepository.findAll());
         return "movimientos/compra";
     }
 
@@ -40,8 +44,10 @@ public class MovimientoController {
             @RequestParam Integer cantidad,
             @RequestParam(required = false) String nuevoNombre,
             @RequestParam(required = false) Double nuevoPrecio,
-            @RequestParam(required = false) String nuevaCategoria) {
+            @RequestParam(required = false) Long categoriaId) {
 
+        if (almacenId == null)
+            throw new IllegalArgumentException("Almacen ID required");
         Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
         Producto producto;
 
@@ -50,9 +56,11 @@ public class MovimientoController {
             producto = new Producto();
             producto.setNombre(nuevoNombre);
             producto.setPrecio(nuevoPrecio);
-            producto.setCategoria(nuevaCategoria);
+            if (categoriaId != null) {
+                producto.setCategoria(categoriaRepository.findById(categoriaId).orElse(null));
+            }
             // La ubicación se podría inferir del almacén o dejar en blanco (Global)
-            // producto.setUbicacion(almacen.getNombre());
+
             producto = productoService.guardarProducto(producto);
         } else {
             if (productoId == null) {
@@ -83,6 +91,8 @@ public class MovimientoController {
             @RequestParam Long productoId,
             @RequestParam Integer cantidad) {
 
+        if (almacenId == null)
+            throw new IllegalArgumentException("Almacen ID required");
         Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
         Producto producto = productoService.obtenerPorId(productoId);
 

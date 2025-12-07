@@ -17,14 +17,16 @@ public class Producto {
 
     private Double precio; // precio
 
-    private String categoria; // categoria
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria; // categoria
 
     private String ubicacion; // ubicación (en el producto, según petición)
 
     public Producto() {
     }
 
-    public Producto(String nombre, Integer cantidad, Double precio, String categoria, String ubicacion) {
+    public Producto(String nombre, Integer cantidad, Double precio, Categoria categoria, String ubicacion) {
         this.nombre = nombre;
         this.cantidad = cantidad;
         this.precio = precio;
@@ -66,11 +68,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 

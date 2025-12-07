@@ -92,7 +92,12 @@ public class AlbaranService {
         lineaAlbaranRepository.save(linea);
 
         // 4. Actualizar Inventario Real
-        inventario.setCantidad(inventario.getCantidad() - cantidad);
-        inventarioRepository.save(inventario);
+        int nuevoStock = inventario.getCantidad() - cantidad;
+        if (nuevoStock == 0) {
+            inventarioRepository.delete(inventario);
+        } else {
+            inventario.setCantidad(nuevoStock);
+            inventarioRepository.save(inventario);
+        }
     }
 }
