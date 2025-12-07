@@ -34,6 +34,9 @@ public class UsuarioService {
     }
 
     public Usuario obtenerPorId(Long id) {
+        if (id == null) {
+            return null;
+        }
         return usuarioRepository.findById(id).orElse(null);
     }
 
