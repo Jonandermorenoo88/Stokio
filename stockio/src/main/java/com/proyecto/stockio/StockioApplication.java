@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 
@@ -17,21 +18,24 @@ public class StockioApplication {
         SpringApplication.run(StockioApplication.class, args);
     }
 
-    // Inicializa un usuario ADMIN sin codificar la contraseña (temporal)
+    // Inicializa un usuario ADMIN con contraseña codificada
     @Bean
-    public CommandLineRunner initAdmin(UsuarioRepository usuarioRepository) {
+    public CommandLineRunner initAdmin(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         return args -> {
             String adminEmail = "admin@stockio.com";
             if (!usuarioRepository.existsByEmail(adminEmail)) {
                 Usuario admin = new Usuario();
                 admin.setEmail(adminEmail);
                 admin.setNombre("Administrador");
-                admin.setPassword("admin123");
+                admin.setPassword(passwordEncoder.encode("admin123"));
                 admin.setRol(Set.of(Role.ADMIN));
                 usuarioRepository.save(admin);
-                System.out.println("✅ ADMIN creado: " + adminEmail + " / admin123 (SIN CODIFICAR)");
+                System.out.println("✅ ADMIN creado: " + adminEmail + " / admin123 (CODIFICADA)");
             } else {
-                System.out.println("ℹ️ ADMIN ya existente: " + adminEmail);
+                Usuario admin = usuarioRepository.findByEmail(adminEmail).get();
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                usuarioRepository.save(admin);
+                System.out.println("ℹ️ ADMIN actualizado: " + adminEmail + " / admin123 (CODIFICADA)");
             }
         };
     }

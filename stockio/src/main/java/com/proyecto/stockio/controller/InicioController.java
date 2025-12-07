@@ -28,48 +28,53 @@ public class InicioController {
         return "login"; // templates/login.html
     }
 
-    @PostMapping("/login")
-    public String loginPost(@RequestParam String email,
-                            @RequestParam String password,
-                            Model model) {
-
-        Optional<Usuario> usuarioOpt = usuarioService.obtenerPorEmail(email);
-
-        // 1) Usuario no existe
-        if (usuarioOpt.isEmpty()) {
-            model.addAttribute("error", "El correo no existe");
-            return "login";
-        }
-
-        Usuario usuario = usuarioOpt.get();
-
-        // 2) Contraseña incorrecta
-        if (!usuario.getPassword().equals(password)) {
-            model.addAttribute("error", "Contraseña incorrecta");
-            return "login";
-        }
-
-        // 3) Usuario sin rol asignado todavía
-        if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
-            model.addAttribute("info",
-                    "Tu cuenta está pendiente de que un administrador te asigne permisos. Inténtalo más tarde.");
-            return "login";
-        }
-
-        // 4) Si es ADMIN → panel
-        if (usuario.getRol().contains(Role.ADMIN)) {
-            return "redirect:/panel";
-        }
-
-        // 5) Si es USUARIO → almacén
-        if (usuario.getRol().contains(Role.USUARIO)) {
-            return "redirect:/almacen";
-        }
-
-        // 6) Cualquier otro caso raro
-        model.addAttribute("error", "No tienes un rol válido asignado. Contacta con el administrador.");
-        return "login";
-    }
+    /*
+     * @PostMapping("/login")
+     * public String loginPost(@RequestParam String email,
+     * 
+     * @RequestParam String password,
+     * Model model) {
+     * 
+     * Optional<Usuario> usuarioOpt = usuarioService.obtenerPorEmail(email);
+     * 
+     * // 1) Usuario no existe
+     * if (usuarioOpt.isEmpty()) {
+     * model.addAttribute("error", "El correo no existe");
+     * return "login";
+     * }
+     * 
+     * Usuario usuario = usuarioOpt.get();
+     * 
+     * // 2) Contraseña incorrecta
+     * if (!usuario.getPassword().equals(password)) {
+     * model.addAttribute("error", "Contraseña incorrecta");
+     * return "login";
+     * }
+     * 
+     * // 3) Usuario sin rol asignado todavía
+     * if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
+     * model.addAttribute("info",
+     * "Tu cuenta está pendiente de que un administrador te asigne permisos. Inténtalo más tarde."
+     * );
+     * return "login";
+     * }
+     * 
+     * // 4) Si es ADMIN → panel
+     * if (usuario.getRol().contains(Role.ADMIN)) {
+     * return "redirect:/panel";
+     * }
+     * 
+     * // 5) Si es USUARIO → almacén
+     * if (usuario.getRol().contains(Role.USUARIO)) {
+     * return "redirect:/almacen";
+     * }
+     * 
+     * // 6) Cualquier otro caso raro
+     * model.addAttribute("error",
+     * "No tienes un rol válido asignado. Contacta con el administrador.");
+     * return "login";
+     * }
+     */
 
     @GetMapping("/panel")
     public String panel() {
