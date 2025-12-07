@@ -1,7 +1,6 @@
 package com.proyecto.stockio.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "productos")
@@ -12,29 +11,25 @@ public class Producto {
     private Long id;
 
     @Column(nullable = false)
-    private String nombre;
+    private String nombre; // Nombre producto
 
-    private String descripcion;
+    private Integer cantidad; // cantidad
 
-    private Double precio;
+    private Double precio; // precio
 
-    private Integer stock;
+    private String categoria; // categoria
 
-    private String imagenUrl;
+    private String ubicacion; // ubicación (en el producto, según petición)
 
-    @ManyToOne
-    @JoinColumn(name = "creado_por_id")
-    private Usuario creadoPor;
-
-    private LocalDateTime fechaCreacion;
-
-    @PrePersist
-    protected void onCreate() {
-        fechaCreacion = LocalDateTime.now();
+    public Producto() {
     }
 
-    // Constructor vacío
-    public Producto() {
+    public Producto(String nombre, Integer cantidad, Double precio, String categoria, String ubicacion) {
+        this.nombre = nombre;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.categoria = categoria;
+        this.ubicacion = ubicacion;
     }
 
     // Getters y Setters
@@ -55,12 +50,12 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public Integer getCantidad() {
+        return cantidad;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 
     public Double getPrecio() {
@@ -71,35 +66,19 @@ public class Producto {
         this.precio = precio;
     }
 
-    public Integer getStock() {
-        return stock;
+    public String getCategoria() {
+        return categoria;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
-    public String getImagenUrl() {
-        return imagenUrl;
+    public String getUbicacion() {
+        return ubicacion;
     }
 
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
-    }
-
-    public Usuario getCreadoPor() {
-        return creadoPor;
-    }
-
-    public void setCreadoPor(Usuario creadoPor) {
-        this.creadoPor = creadoPor;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
     }
 }

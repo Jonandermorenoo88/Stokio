@@ -32,7 +32,7 @@ public class InicioController {
         if (isAdmin) {
             return "panel"; // Admin va al panel general
         } else if (isUsuario) {
-            return "redirect:/almacen"; // Usuario va directo al almacén
+            return "redirect:/almacenes"; // Usuario va directo al almacén
         } else {
             // Usuario sin rol (pendiente de aprobación)
             return "pendiente";

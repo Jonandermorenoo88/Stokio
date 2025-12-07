@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Producto</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            text-decoration: none;
+            padding: 10px 15px;
+            color: white;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 th:text="${producto.id == null} ? 'Nuevo Producto' : 'Editar Producto'"></h1>
+
+    <form th:action="@{/productos/guardar}" th:object="${producto}" method="post">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group">
+            <label>Nombre del Producto:</label>
+            <input type="text" th:field="*{nombre}" required />
+        </div>
+
+        <div class="form-group">
+            <label>Cantidad:</label>
+            <input type="number" th:field="*{cantidad}" />
+        </div>
+
+        <div class="form-group">
+            <label>Precio:</label>
+            <input type="number" step="0.01" th:field="*{precio}" />
+        </div>
+
+        <div class="form-group">
+            <label>Categoría:</label>
+            <input type="text" th:field="*{categoria}" />
+        </div>
+
+        <div class="form-group">
+            <label>Ubicación:</label>
+            <input type="text" th:field="*{ubicacion}" />
+        </div>
+
+        <button type="submit">Guardar</button>
+        <a href="/productos" class="btn-cancel">Cancelar</a>
+    </form>
+
+</body>
+
+</html>

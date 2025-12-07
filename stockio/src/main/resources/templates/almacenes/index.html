@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Almacenes</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            background: #eee;
+            color: black;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+        }
+
+        .actions {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Lista de Almacenes</h1>
+
+    <a href="/almacenes/nuevo" class="btn btn-primary">Nuevo Almacén/Registro</a>
+    <a href="/panel" class="btn">Volver al Panel</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre Almacén</th>
+                <th>Ubicación</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="almacen : ${almacenes}">
+                <td th:text="${almacen.id}"></td>
+                <td th:text="${almacen.nombre}"></td>
+                <td th:text="${almacen.ubicacion}"></td>
+                <td th:text="${almacen.producto != null} ? ${almacen.producto.nombre} : 'Sin Producto'"></td>
+                <td th:text="${almacen.precio}"></td>
+                <td th:text="${almacen.cantidad}"></td>
+                <td class="actions">
+                    <a th:href="@{/almacenes/editar/{id}(id=${almacen.id})}" class="btn">Editar</a>
+                    <a th:href="@{/almacenes/eliminar/{id}(id=${almacen.id})}" class="btn btn-danger"
+                        onclick="return confirm('¿Estás seguro?');">Eliminar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>

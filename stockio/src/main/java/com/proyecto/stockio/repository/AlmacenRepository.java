@@ -1,9 +1,9 @@
 package com.proyecto.stockio.repository;
 
-import com.proyecto.stockio.model.Producto;
+import com.proyecto.stockio.model.Almacen;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductoRepository extends JpaRepository<Producto, Long> {
+public interface AlmacenRepository extends JpaRepository<Almacen, Long> {
 }
