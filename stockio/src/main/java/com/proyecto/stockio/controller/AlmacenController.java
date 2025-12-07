@@ -30,6 +30,9 @@ public class AlmacenController {
     @Autowired
     private com.proyecto.stockio.service.ProductoService productoService;
 
+    @Autowired
+    private com.proyecto.stockio.service.AlbaranService albaranService;
+
     // Vista principal: Lista de almacenes con totales
     @GetMapping
     public String listarAlmacenes(Model model) {
@@ -110,12 +113,8 @@ public class AlmacenController {
         if (producto == null)
             throw new IllegalArgumentException("Producto no encontrado");
 
-        // Buscar si ya existe para sumar cantidad
-        Inventario item = inventarioRepository.findByAlmacenAndProducto(almacen, producto)
-                .orElse(new Inventario(almacen, producto, 0));
-
-        item.setCantidad(item.getCantidad() + cantidad);
-        inventarioRepository.save(item);
+        // Usar AlbaranService para registrar la entrada y el movimiento
+        albaranService.registrarEntrada(almacen, producto, cantidad, null); // TODO: Pasar usuario autenticado
 
         return "redirect:/almacenes/" + almacenId;
     }

@@ -20,10 +20,11 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
-    public void guardarProducto(Producto producto) {
+    public Producto guardarProducto(Producto producto) {
         if (producto != null) {
-            productoRepository.save(producto);
+            return productoRepository.save(producto);
         }
+        return null;
     }
 
     public void eliminarProducto(Long id) {

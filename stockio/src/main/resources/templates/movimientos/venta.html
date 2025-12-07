@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Venta de Productos</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            text-decoration: none;
+            padding: 10px 15px;
+            color: white;
+            display: inline-block;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Registrar Venta (Salida)</h1>
+
+    <div th:if="${param.error}" class="error">
+        <p th:text="${param.error}">Error</p>
+    </div>
+
+    <form action="/movimientos/ventas/guardar" method="post">
+
+        <div class="form-group">
+            <label for="almacenId">Almacén de Origen:</label>
+            <select name="almacenId" id="almacenId" required>
+                <option value="" disabled selected>Selecciona un almacén</option>
+                <option th:each="almacen : ${almacenes}" th:value="${almacen.id}"
+                    th:text="${almacen.nombre} + ' (' + ${almacen.ubicacion} + ')'"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="productoId">Producto:</label>
+            <select name="productoId" id="productoId" required>
+                <option value="" disabled selected>Selecciona un producto</option>
+                <option th:each="producto : ${productos}" th:value="${producto.id}" th:text="${producto.nombre}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="cantidad">Cantidad a Vender:</label>
+            <input type="number" name="cantidad" id="cantidad" min="1" required />
+        </div>
+
+        <button type="submit">Registrar Venta</button>
+        <a href="/panel" class="btn-cancel">Cancelar</a>
+    </form>
+
+</body>
+
+</html>

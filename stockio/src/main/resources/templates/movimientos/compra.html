@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Compra de Productos</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            text-decoration: none;
+            padding: 10px 15px;
+            color: white;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Registrar Compra (Entrada)</h1>
+
+    <form action="/movimientos/compras/guardar" method="post">
+
+        <div class="form-group">
+            <label for="almacenId">Almacén de Destino:</label>
+            <select name="almacenId" id="almacenId" required>
+                <option value="" disabled selected>Selecciona un almacén</option>
+                <option th:each="almacen : ${almacenes}" th:value="${almacen.id}"
+                    th:text="${almacen.nombre} + ' (' + ${almacen.ubicacion} + ')'"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <input type="checkbox" id="crearNuevo" name="crearNuevo" onchange="toggleNuevoProducto()">
+            <label for="crearNuevo" style="display:inline;">Registrar Nuevo Producto</label>
+        </div>
+
+        <div class="form-group" id="grupoProductoExistente">
+            <label for="productoId">Producto Existente:</label>
+            <select name="productoId" id="productoId" required>
+                <option value="" disabled selected>Selecciona un producto</option>
+                <option th:each="producto : ${productos}" th:value="${producto.id}" th:text="${producto.nombre}">
+                </option>
+            </select>
+        </div>
+
+        <div id="grupoNuevoProducto"
+            style="display:none; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px; background: #f9f9f9;">
+            <h3>Detalles del Nuevo Producto</h3>
+            <div class="form-group">
+                <label for="nuevoNombre">Nombre:</label>
+                <input type="text" name="nuevoNombre" id="nuevoNombre">
+            </div>
+            <div class="form-group">
+                <label for="nuevoPrecio">Precio:</label>
+                <input type="number" step="0.01" name="nuevoPrecio" id="nuevoPrecio">
+            </div>
+            <div class="form-group">
+                <label for="nuevaCategoria">Categoría:</label>
+                <input type="text" name="nuevaCategoria" id="nuevaCategoria">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cantidad">Cantidad a Comprar:</label>
+            <input type="number" name="cantidad" id="cantidad" min="1" required />
+        </div>
+
+        <button type="submit">Registrar Compra</button>
+        <a href="/panel" class="btn-cancel">Cancelar</a>
+    </form>
+
+    <script>
+        function toggleNuevoProducto() {
+            var isChecked = document.getElementById('crearNuevo').checked;
+            var grupoExistente = document.getElementById('grupoProductoExistente');
+            var grupoNuevo = document.getElementById('grupoNuevoProducto');
+            var selectProducto = document.getElementById('productoId');
+
+            if (isChecked) {
+                grupoExistente.style.display = 'none';
+                grupoNuevo.style.display = 'block';
+                selectProducto.removeAttribute('required');
+                document.getElementById('nuevoNombre').setAttribute('required', 'true');
+                document.getElementById('nuevoPrecio').setAttribute('required', 'true');
+            } else {
+                grupoExistente.style.display = 'block';
+                grupoNuevo.style.display = 'none';
+                selectProducto.setAttribute('required', 'true');
+                document.getElementById('nuevoNombre').removeAttribute('required');
+                document.getElementById('nuevoPrecio').removeAttribute('required');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

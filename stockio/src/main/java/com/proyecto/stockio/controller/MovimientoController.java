@@ -1,0 +1,99 @@
+package com.proyecto.stockio.controller;
+
+import com.proyecto.stockio.model.Almacen;
+import com.proyecto.stockio.model.Producto;
+import com.proyecto.stockio.repository.AlmacenRepository;
+import com.proyecto.stockio.service.AlbaranService;
+import com.proyecto.stockio.service.ProductoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping("/movimientos")
+public class MovimientoController {
+
+    @Autowired
+    private AlmacenRepository almacenRepository;
+
+    @Autowired
+    private ProductoService productoService;
+
+    @Autowired
+    private AlbaranService albaranService;
+
+    // --- COMPRA (ENTRADA) ---
+    @GetMapping("/compras/nueva")
+    public String nuevaCompra(Model model) {
+        model.addAttribute("almacenes", almacenRepository.findAll());
+        model.addAttribute("productos", productoService.listarProductos()); // Mostrar todos para comprar
+        return "movimientos/compra";
+    }
+
+    @PostMapping("/compras/guardar")
+    public String guardarCompra(@RequestParam Long almacenId,
+            @RequestParam(required = false) Long productoId,
+            @RequestParam Integer cantidad,
+            @RequestParam(required = false) String nuevoNombre,
+            @RequestParam(required = false) Double nuevoPrecio,
+            @RequestParam(required = false) String nuevaCategoria) {
+
+        Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
+        Producto producto;
+
+        if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
+            // Crear nuevo producto
+            producto = new Producto();
+            producto.setNombre(nuevoNombre);
+            producto.setPrecio(nuevoPrecio);
+            producto.setCategoria(nuevaCategoria);
+            // La ubicación se podría inferir del almacén o dejar en blanco (Global)
+            // producto.setUbicacion(almacen.getNombre());
+            producto = productoService.guardarProducto(producto);
+        } else {
+            if (productoId == null) {
+                throw new IllegalArgumentException("Debe seleccionar un producto o crear uno nuevo");
+            }
+            producto = productoService.obtenerPorId(productoId);
+        }
+
+        // Registrar Entrada (Compra)
+        albaranService.registrarEntrada(almacen, producto, cantidad, null); // Usuario TODO
+
+        return "redirect:/albaranes"; // Volver al historial
+    }
+
+    // --- VENTA (SALIDA) ---
+    @GetMapping("/ventas/nueva")
+    public String nuevaVenta(Model model) {
+        model.addAttribute("almacenes", almacenRepository.findAll());
+        // En ventas, idealmente filtramos productos con stock, pero por simplicidad
+        // mostramos todos
+        // y validamos en el backend o usamos JS para filtrar por almacén (TODO para V2)
+        model.addAttribute("productos", productoService.listarProductos());
+        return "movimientos/venta";
+    }
+
+    @PostMapping("/ventas/guardar")
+    public String guardarVenta(@RequestParam Long almacenId,
+            @RequestParam Long productoId,
+            @RequestParam Integer cantidad) {
+
+        Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
+        Producto producto = productoService.obtenerPorId(productoId);
+
+        try {
+            // Registrar Salida (Venta)
+            albaranService.registrarSalida(almacen, producto, cantidad, null); // Usuario TODO
+        } catch (IllegalArgumentException e) {
+            // Si falta stock, podríamos redirigir con error
+            return "redirect:/movimientos/ventas/nueva?error=" + e.getMessage();
+        }
+
+        return "redirect:/albaranes";
+    }
+}
