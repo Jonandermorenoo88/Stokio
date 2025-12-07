@@ -18,8 +18,25 @@ public class InicioController {
     }
 
     @GetMapping("/panel")
-    public String panel() {
-        return "panel"; // templates/panel.html
+    public String panel(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null) {
+            return "redirect:/login";
+        }
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean isUsuario = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_USUARIO"));
+
+        if (isAdmin) {
+            return "panel"; // Admin va al panel general
+        } else if (isUsuario) {
+            return "redirect:/almacen"; // Usuario va directo al almacén
+        } else {
+            // Usuario sin rol (pendiente de aprobación)
+            return "pendiente";
+        }
     }
 
     @GetMapping("/registro")

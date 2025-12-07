@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/pendiente .css">
+    <title>Stockio - Pendiente de aprobación</title>
+</head>
+
+<body
+    style="display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f5f6fa;">
+
+    <div class="message-container">
+        <h2>Cuenta pendiente de aprobación</h2>
+        <p>
+            Su registro se ha completado correctamente, pero su cuenta aún no tiene permisos asignados.
+            <br><br>
+            Por favor, espere a que un administrador active su cuenta y le asigne un rol.
+        </p>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="logout-btn">Cerrar sesión</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
