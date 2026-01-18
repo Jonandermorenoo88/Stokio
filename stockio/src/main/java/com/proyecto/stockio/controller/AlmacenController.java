@@ -34,6 +34,9 @@ public class AlmacenController {
     @Autowired
     private com.proyecto.stockio.repository.CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private com.proyecto.stockio.service.UsuarioService usuarioService;
+
     // Vista principal: Lista de almacenes con totales
     @GetMapping
     public String listarAlmacenes(Model model) {
@@ -177,15 +180,23 @@ public class AlmacenController {
     @PostMapping("/{almacenId}/agregarProducto")
     public String agregarProducto(@PathVariable Long almacenId,
             @RequestParam Long productoId,
-            @RequestParam Integer cantidad) {
+            @RequestParam Integer cantidad,
+            java.security.Principal principal) {
 
         Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
         Producto producto = productoService.obtenerPorId(productoId);
         if (producto == null)
             throw new IllegalArgumentException("Producto no encontrado");
 
+        // Obtener usuario
+        com.proyecto.stockio.model.Usuario usuario = null;
+        if (principal != null) {
+            usuario = com.proyecto.stockio.service.UsuarioService.obtenerUsuarioDesdePrincipal(principal,
+                    usuarioService);
+        }
+
         // Usar AlbaranService para registrar la entrada y el movimiento
-        albaranService.registrarEntrada(almacen, producto, cantidad, null); // TODO: Pasar usuario autenticado
+        albaranService.registrarEntrada(almacen, producto, cantidad, usuario);
 
         return "redirect:/almacenes/" + almacenId;
     }

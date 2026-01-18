@@ -43,4 +43,10 @@ public class UsuarioService {
     public Optional<Usuario> obtenerPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
     }
+
+    public static Usuario obtenerUsuarioDesdePrincipal(java.security.Principal principal, UsuarioService service) {
+        if (principal == null)
+            return null;
+        return service.obtenerPorEmail(principal.getName()).orElse(null);
+    }
 }

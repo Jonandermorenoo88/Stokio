@@ -44,7 +44,8 @@ public class MovimientoController {
             @RequestParam Integer cantidad,
             @RequestParam(required = false) String nuevoNombre,
             @RequestParam(required = false) Double nuevoPrecio,
-            @RequestParam(required = false) Long categoriaId) {
+            @RequestParam(required = false) Long categoriaId,
+            java.security.Principal principal) {
 
         if (almacenId == null)
             throw new IllegalArgumentException("Almacen ID required");
@@ -69,8 +70,15 @@ public class MovimientoController {
             producto = productoService.obtenerPorId(productoId);
         }
 
+        // Obtener usuario actual
+        com.proyecto.stockio.model.Usuario usuario = null;
+        if (principal != null) {
+            usuario = com.proyecto.stockio.service.UsuarioService.obtenerUsuarioDesdePrincipal(principal,
+                    usuarioService);
+        }
+
         // Registrar Entrada (Compra)
-        albaranService.registrarEntrada(almacen, producto, cantidad, null); // Usuario TODO
+        albaranService.registrarEntrada(almacen, producto, cantidad, usuario);
 
         return "redirect:/albaranes"; // Volver al historial
     }
@@ -89,16 +97,24 @@ public class MovimientoController {
     @PostMapping("/ventas/guardar")
     public String guardarVenta(@RequestParam Long almacenId,
             @RequestParam Long productoId,
-            @RequestParam Integer cantidad) {
+            @RequestParam Integer cantidad,
+            java.security.Principal principal) {
 
         if (almacenId == null)
             throw new IllegalArgumentException("Almacen ID required");
         Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
         Producto producto = productoService.obtenerPorId(productoId);
 
+        // Obtener usuario actual
+        com.proyecto.stockio.model.Usuario usuario = null;
+        if (principal != null) {
+            usuario = com.proyecto.stockio.service.UsuarioService.obtenerUsuarioDesdePrincipal(principal,
+                    usuarioService);
+        }
+
         try {
             // Registrar Salida (Venta)
-            albaranService.registrarSalida(almacen, producto, cantidad, null); // Usuario TODO
+            albaranService.registrarSalida(almacen, producto, cantidad, usuario);
         } catch (IllegalArgumentException e) {
             // Si falta stock, podríamos redirigir con error
             return "redirect:/movimientos/ventas/nueva?error=" + e.getMessage();
@@ -106,4 +122,7 @@ public class MovimientoController {
 
         return "redirect:/albaranes";
     }
+
+    @Autowired
+    private com.proyecto.stockio.service.UsuarioService usuarioService;
 }

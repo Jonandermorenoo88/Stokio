@@ -23,8 +23,20 @@ public class CategoriaController {
 
     @PostMapping("/guardar")
     public String guardarCategoria(@ModelAttribute Categoria categoria,
-            @RequestParam(required = false) Long almacenId) {
-        categoriaRepository.save(categoria);
+            @RequestParam(required = false) Long almacenId,
+            Model model) {
+        try {
+            categoriaRepository.save(categoria);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            model.addAttribute("error", "Error: Ya existe una categoría con ese nombre.");
+            model.addAttribute("almacenId", almacenId);
+            return "categorias/form";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al guardar la categoría: " + e.getMessage());
+            model.addAttribute("almacenId", almacenId);
+            return "categorias/form";
+        }
+
         if (almacenId != null) {
             return "redirect:/almacenes/" + almacenId;
         }

@@ -85,8 +85,8 @@
                 <td th:text="${cat.nombre}"></td>
                 <td>-</td>
                 <!-- Placeholder for 'number of distinct products' if available, otherwise just remove or put - -->
-                <td th:text="${cat.cantidadTotal}"></td>
-                <td th:text="${#numbers.formatDecimal(cat.valorTotal, 1, 2) + ' €'}"></td>
+                <td th:text="${cat.cantidad}"></td>
+                <td th:text="${#numbers.formatDecimal(cat.valor, 1, 2) + ' €'}"></td>
                 <td class="actions">
                     <!-- Botón Entrar: Redirige a la vista detallada de esa categoría -->
                     <a th:href="@{/almacenes/{id}/categoria(id=${almacen.id}, nombre=${cat.nombre})}"

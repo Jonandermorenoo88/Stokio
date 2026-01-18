@@ -24,13 +24,21 @@ public class UsuarioController {
 
     // GUARDAR USUARIO (desde registro)
     @PostMapping("/guardar")
-    public String guardarUsuario(@ModelAttribute Usuario usuario) {
+    public String guardarUsuario(@ModelAttribute Usuario usuario, Model model) {
         // No asignamos rol por defecto. El usuario debe esperar a que el admin le
         // asigne uno.
         // if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
         // usuario.getRol().add(Role.USUARIO);
         // }
-        usuarioService.guardarUsuario(usuario);
+        try {
+            usuarioService.guardarUsuario(usuario);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            model.addAttribute("error", "Error: El correo electrónico ya está registrado.");
+            return "registro";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al registrar el usuario: " + e.getMessage());
+            return "registro";
+        }
         return "redirect:/login";
     }
 

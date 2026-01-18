@@ -1,37 +1,45 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/login.css">
     <title>Stockio - Registrar usuario</title>
 </head>
+
 <body>
 
-<div class="login-container">
-    <h2>Registrar usuario</h2>
+    <div class="login-container">
+        <h2>Registrar usuario</h2>
 
-    <form th:action="@{/usuarios/guardar}" method="post">
-        <div class="form-group">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+        <div th:if="${error}"
+            style="color: red; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px; text-align: center;">
+            <span th:text="${error}"></span>
         </div>
 
-        <div class="form-group">
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" name="email" placeholder="usuario@correo.com" required>
-        </div>
+        <form th:action="@{/usuarios/guardar}" method="post">
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Nombre" required>
+            </div>
 
-        <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="********" required>
-        </div>
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" placeholder="usuario@correo.com" required>
+            </div>
 
-        <button type="submit" class="btn">Registrarse</button>
-    </form>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" placeholder="********" required>
+            </div>
 
-    <a href="/" class="volver">Volver al inicio</a>
-</div>
+            <button type="submit" class="btn">Registrarse</button>
+        </form>
+
+        <a href="/" class="volver">Volver al inicio</a>
+    </div>
 
 </body>
+
 </html>

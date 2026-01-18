@@ -38,6 +38,12 @@
 
 <body>
     <h1>Crear Nueva Categoría</h1>
+
+    <div th:if="${error}"
+        style="color: red; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
+        <span th:text="${error}"></span>
+    </div>
+
     <form th:action="@{/categorias/guardar}" method="post" th:object="${categoria}">
         <input type="hidden" name="almacenId" th:value="${almacenId}" />
         <div class="form-group">

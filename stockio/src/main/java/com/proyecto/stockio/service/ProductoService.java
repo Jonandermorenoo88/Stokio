@@ -52,24 +52,9 @@ public class ProductoService {
      * 2. Ubicación coincide con nombre o ubicación del almacén
      */
     public List<Producto> encontrarDisponiblesParaAlmacen(Almacen almacen) {
-        List<Producto> todos = productoRepository.findAll();
-
-        return todos.stream()
-                .filter(p -> esProductoVisibleEnAlmacen(p, almacen))
-                .collect(Collectors.toList());
+        return productoRepository.findDisponiblesParaAlmacen(almacen.getNombre(), almacen.getUbicacion());
     }
 
-    private boolean esProductoVisibleEnAlmacen(Producto p, Almacen a) {
-        String prodUbicacion = p.getUbicacion();
-
-        // Si no tiene ubicación definida, es global (visible en todos)
-        if (prodUbicacion == null || prodUbicacion.trim().isEmpty()) {
-            return true;
-        }
-
-        // Si tiene ubicación, debe coincidir con nombre o ubicación del almacén
-        // Ignoramos mayúsculas/minúsculas
-        return prodUbicacion.equalsIgnoreCase(a.getNombre()) ||
-                prodUbicacion.equalsIgnoreCase(a.getUbicacion());
-    }
+    // Método auxiliar eliminado ya que la lógica se movió a la base de datos
+    // (Query)
 }
