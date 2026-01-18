@@ -37,7 +37,7 @@
 </head>
 
 <body>
-    <h1>Crear Nueva Categoría</h1>
+    <h1 th:text="${categoria.id != null} ? 'Editar Categoría' : 'Crear Nueva Categoría'">Crear Nueva Categoría</h1>
 
     <div th:if="${error}"
         style="color: red; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; margin-bottom: 15px; border-radius: 4px;">
@@ -46,6 +46,7 @@
 
     <form th:action="@{/categorias/guardar}" method="post" th:object="${categoria}">
         <input type="hidden" name="almacenId" th:value="${almacenId}" />
+        <input type="hidden" th:field="*{id}" />
         <div class="form-group">
             <label for="nombre">Nombre de la Categoría:</label>
             <input type="text" id="nombre" th:field="*{nombre}" required>

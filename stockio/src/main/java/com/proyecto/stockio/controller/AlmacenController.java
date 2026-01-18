@@ -85,7 +85,7 @@ public class AlmacenController {
             double valorTotal = itemsDeCategoria.stream().mapToDouble(i -> i.getCantidad()
                     * (i.getProducto().getPrecio() != null ? i.getProducto().getPrecio() : 0)).sum();
 
-            return new CategoriaDTO(cat.getNombre(), cantidadTotal, valorTotal);
+            return new CategoriaDTO(cat.getId(), cat.getNombre(), cantidadTotal, valorTotal);
         }).collect(Collectors.toList());
 
         // Manejar items "Sin Categoría" si es necesario (opcional)
@@ -203,14 +203,20 @@ public class AlmacenController {
 
     // DTO simple para la vista
     public static class CategoriaDTO {
+        private Long id; // Added ID field
         private String nombre;
         private Integer cantidad;
         private Double valor;
 
-        public CategoriaDTO(String nombre, Integer cantidad, Double valor) {
+        public CategoriaDTO(Long id, String nombre, Integer cantidad, Double valor) {
+            this.id = id;
             this.nombre = nombre;
             this.cantidad = cantidad;
             this.valor = valor;
+        }
+
+        public Long getId() {
+            return id;
         }
 
         public String getNombre() {

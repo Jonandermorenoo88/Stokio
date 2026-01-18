@@ -92,8 +92,11 @@
                     <a th:href="@{/almacenes/{id}/categoria(id=${almacen.id}, nombre=${cat.nombre})}"
                         class="btn btn-primary" style="margin-right: 5px;">Entrar</a>
                     <!-- Placeholder buttons acting as if they exist, for UI consistency -->
-                    <button class="btn" disabled style="opacity: 0.5;">Editar</button>
-                    <button class="btn btn-danger" disabled style="opacity: 0.5;">Eliminar</button>
+                    <a th:href="@{/categorias/editar/{id}(id=${cat.id}, almacenId=${almacen.id})}"
+                        class="btn">Editar</a>
+                    <a th:href="@{/categorias/eliminar/{id}(id=${cat.id}, almacenId=${almacen.id})}"
+                        class="btn btn-danger"
+                        onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</a>
                 </td>
             </tr>
         </tbody>
