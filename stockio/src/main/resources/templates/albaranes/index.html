@@ -55,7 +55,7 @@
                 <th>Tipo</th>
                 <th>Almacén</th>
                 <th>Usuario</th>
-                <!-- <th>Acciones</th> -->
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -67,8 +67,11 @@
                 <td th:text="${#temporals.format(albaran.fecha, 'dd-MM-yyyy HH:mm')}"></td>
                 <td th:text="${albaran.tipo}"></td>
                 <td th:text="${albaran.almacen.nombre}"></td>
-                <td th:text="${albaran.usuario != null ? albaran.usuario.nombre : 'Sistema'}"></td>
-                <!-- <td><a href="#" class="btn">Ver Detalles</a></td> -->
+                <td th:text="${albaran.usuario != null ? albaran.usuario.email : 'Desconocido'}"></td>
+                <td>
+                    <a th:href="@{/albaranes/{id}(id=${albaran.id})}" class="btn"
+                        style="padding: 5px 10px; font-size: 0.9em;">Ver / Imprimir</a>
+                </td>
             </tr>
         </tbody>
     </table>
