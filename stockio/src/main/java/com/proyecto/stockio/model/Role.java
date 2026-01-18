@@ -2,5 +2,6 @@ package com.proyecto.stockio.model;
 
 public enum Role {
     ADMIN,
-    USUARIO
+    JEFE_ALMACEN,
+    AUXILIAR_ALMACEN
 }

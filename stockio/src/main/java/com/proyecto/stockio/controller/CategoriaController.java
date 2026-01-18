@@ -14,6 +14,7 @@ public class CategoriaController {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/nueva")
     public String nuevaCategoria(@RequestParam(required = false) Long almacenId, Model model) {
         model.addAttribute("categoria", new Categoria());
@@ -21,12 +22,13 @@ public class CategoriaController {
         return "categorias/form";
     }
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @PostMapping("/guardar")
     public String guardarCategoria(@ModelAttribute Categoria categoria,
             @RequestParam(required = false) Long almacenId,
             Model model) {
         try {
-            categoriaRepository.save(categoria);
+            categoriaRepository.save(java.util.Objects.requireNonNull(categoria, "La categoría no puede ser nula"));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             model.addAttribute("error", "Error: Ya existe una categoría con ese nombre.");
             model.addAttribute("almacenId", almacenId);
@@ -43,8 +45,10 @@ public class CategoriaController {
         return "redirect:/almacenes";
     }
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/editar/{id}")
     public String editarCategoria(@PathVariable Long id, @RequestParam(required = false) Long almacenId, Model model) {
+        java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Categoría no válida: " + id));
         model.addAttribute("categoria", categoria);
@@ -52,12 +56,14 @@ public class CategoriaController {
         return "categorias/form";
     }
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/eliminar/{id}")
     public String eliminarCategoria(@PathVariable Long id, @RequestParam(required = false) Long almacenId) {
         // TODO: Comprobar si hay productos en esta categoría antes de borrar para
         // evitar error de FK
         // O dejar que falle y capturar la excepción
         try {
+            java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
             categoriaRepository.deleteById(id);
         } catch (Exception e) {
             // Podríamos redirigir con un error, pero por ahora redirigimos simple

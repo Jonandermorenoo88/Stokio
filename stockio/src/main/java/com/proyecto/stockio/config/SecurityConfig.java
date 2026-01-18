@@ -10,34 +10,36 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**", "/images/**", "/*.css",
-                                "/*.js", "/*.png")
-                        .permitAll()
-                        .requestMatchers("/usuarios/**").hasRole("ADMIN")
-                        .requestMatchers("/panel").authenticated()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login") // Spring Security interceptará esta URL
-                        .usernameParameter("email") // Usamos 'email' en lugar de 'username'
-                        .defaultSuccessUrl("/panel", true)
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/", "/login", "/registro", "/css/**", "/js/**",
+                                                                "/images/**", "/*.css",
+                                                                "/*.js", "/*.png")
+                                                .permitAll()
+                                                .requestMatchers("/usuarios/**").hasRole("ADMIN")
+                                                .requestMatchers("/panel").authenticated()
+                                                .anyRequest().authenticated())
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .loginProcessingUrl("/login") // Spring Security interceptará esta URL
+                                                .usernameParameter("email") // Usamos 'email' en lugar de 'username'
+                                                .defaultSuccessUrl("/panel", true)
+                                                .permitAll())
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .logoutSuccessUrl("/login?logout")
+                                                .permitAll());
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 }

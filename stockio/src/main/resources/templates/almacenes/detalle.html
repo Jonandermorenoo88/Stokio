@@ -60,7 +60,8 @@
     <h4 style="color: gray; margin-top: -15px;" th:text="${almacen.ubicacion}">Ubicación</h4>
 
     <!-- Botonera superior like index.html -->
-    <a th:href="@{/categorias/nueva(almacenId=${almacen.id})}" class="btn btn-primary">Nueva Categoría</a>
+    <a th:href="@{/categorias/nueva(almacenId=${almacen.id})}" class="btn btn-primary"
+        sec:authorize="hasAnyRole('ADMIN', 'JEFE_ALMACEN')">Nueva Categoría</a>
     <a href="/almacenes" class="btn">Volver a Almacenes</a>
 
     <!-- Lista de Inventario Agrupada -->
@@ -92,11 +93,11 @@
                     <a th:href="@{/almacenes/{id}/categoria(id=${almacen.id}, nombre=${cat.nombre})}"
                         class="btn btn-primary" style="margin-right: 5px;">Entrar</a>
                     <!-- Placeholder buttons acting as if they exist, for UI consistency -->
-                    <a th:href="@{/categorias/editar/{id}(id=${cat.id}, almacenId=${almacen.id})}"
-                        class="btn">Editar</a>
+                    <a th:href="@{/categorias/editar/{id}(id=${cat.id}, almacenId=${almacen.id})}" class="btn"
+                        sec:authorize="hasAnyRole('ADMIN', 'JEFE_ALMACEN')">Editar</a>
                     <a th:href="@{/categorias/eliminar/{id}(id=${cat.id}, almacenId=${almacen.id})}"
-                        class="btn btn-danger"
-                        onclick="return confirm('¿Estás seguro de eliminar esta categoría?');">Eliminar</a>
+                        class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar esta categoría?');"
+                        sec:authorize="hasAnyRole('ADMIN', 'JEFE_ALMACEN')">Eliminar</a>
                 </td>
             </tr>
         </tbody>

@@ -47,6 +47,13 @@
       <artifactId>thymeleaf-extras-springsecurity6</artifactId>
     </dependency>
 
+    <!-- Excel Export (Apache POI) -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>5.2.3</version>
+    </dependency>
+
     <!-- JPA / Hibernate -->
     <dependency>
       <groupId>org.springframework.boot</groupId>

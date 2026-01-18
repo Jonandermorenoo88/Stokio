@@ -24,7 +24,12 @@ public class UsuarioService {
     public void guardarUsuario(Usuario usuario) {
         // Encriptar contraseña antes de guardar
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuarioRepository.save(usuario);
+        usuarioRepository.save(java.util.Objects.requireNonNull(usuario, "Usuario null"));
+    }
+
+    public void guardarUsuarioSinEncriptar(Usuario usuario) {
+        // Guardar directamente (para actualizaciones de rol, etc.)
+        usuarioRepository.save(java.util.Objects.requireNonNull(usuario, "Usuario null"));
     }
 
     public void eliminarUsuario(Long id) {

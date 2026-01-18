@@ -14,9 +14,32 @@ public class AlbaranController {
     @Autowired
     private AlbaranRepository albaranRepository;
 
+    @Autowired
+    private com.proyecto.stockio.service.ExcelService excelService;
+
     @GetMapping
     public String listarAlbaranes(Model model) {
         model.addAttribute("albaranes", albaranRepository.findAll());
         return "albaranes/index";
+    }
+
+    @GetMapping("/exportar")
+    public org.springframework.http.ResponseEntity<org.springframework.core.io.InputStreamResource> exportarExcel() {
+        java.util.List<com.proyecto.stockio.model.Albaran> albaranes = albaranRepository.findAll();
+
+        java.io.ByteArrayInputStream in = excelService.albaranesToExcel(albaranes);
+        // Validar que no sea null para evitar warnings de tipo
+        java.io.InputStream inputStream = java.util.Objects.requireNonNull(in, "El stream de Excel no puede ser nulo");
+
+        // Headers
+        org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=movimientos.xlsx");
+
+        return org.springframework.http.ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(org.springframework.http.MediaType
+                        .parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(new org.springframework.core.io.InputStreamResource(inputStream));
     }
 }

@@ -42,7 +42,8 @@ public class AlmacenController {
     public String listarAlmacenes(Model model) {
         List<Almacen> almacenes = almacenRepository.findAll();
         List<AlmacenDTO> almacenesDTO = almacenes.stream().map(almacen -> {
-            List<Inventario> inventarios = inventarioRepository.findByAlmacen(almacen);
+            List<Inventario> inventarios = inventarioRepository
+                    .findByAlmacen(java.util.Objects.requireNonNull(almacen));
 
             Integer totalCantidad = inventarios.stream()
                     .mapToInt(Inventario::getCantidad)
@@ -64,6 +65,7 @@ public class AlmacenController {
     // Vista detalle: Resumen de Categorías
     @GetMapping("/{id}")
     public String verAlmacen(@PathVariable Long id, Model model) {
+        java.util.Objects.requireNonNull(id, "El ID del almacén no puede ser nulo");
         Almacen almacen = almacenRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
 
@@ -107,6 +109,7 @@ public class AlmacenController {
     // Vista detalle de una categoría específica (Lista de productos)
     @GetMapping("/{id}/categoria")
     public String verCategoria(@PathVariable Long id, @RequestParam("nombre") String nombreCategoria, Model model) {
+        java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
         Almacen almacen = almacenRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
 
@@ -147,31 +150,37 @@ public class AlmacenController {
     }
 
     // Crear nuevo almacén
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/nuevo")
     public String mostrarFormularioNuevo(Model model) {
         model.addAttribute("almacen", new Almacen());
         return "almacenes/form";
     }
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @PostMapping("/guardar")
     public String guardarAlmacen(@ModelAttribute Almacen almacen) {
-        almacenRepository.save(almacen);
+        almacenRepository.save(java.util.Objects.requireNonNull(almacen, "El almacén no puede ser nulo"));
         return "redirect:/almacenes";
     }
 
     // Editar almacén
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+        java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
         Almacen almacen = almacenRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
         model.addAttribute("almacen", almacen);
         return "almacenes/form";
     }
 
+    @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/eliminar/{id}")
     public String eliminarAlmacen(@PathVariable Long id) {
         // Opcional: Borrar inventario asociado primero o tener CascadeType.REMOVE en la
         // entidad (no hecho aqui por simplicidad)
+        java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
         almacenRepository.deleteById(id);
         return "redirect:/almacenes";
     }
@@ -183,7 +192,9 @@ public class AlmacenController {
             @RequestParam Integer cantidad,
             java.security.Principal principal) {
 
+        java.util.Objects.requireNonNull(almacenId, "El ID de almacén no puede ser nulo");
         Almacen almacen = almacenRepository.findById(almacenId).orElseThrow();
+        java.util.Objects.requireNonNull(productoId, "El ID de producto no puede ser nulo");
         Producto producto = productoService.obtenerPorId(productoId);
         if (producto == null)
             throw new IllegalArgumentException("Producto no encontrado");
@@ -196,7 +207,7 @@ public class AlmacenController {
         }
 
         // Usar AlbaranService para registrar la entrada y el movimiento
-        albaranService.registrarEntrada(almacen, producto, cantidad, usuario);
+        albaranService.registrarEntrada(java.util.Objects.requireNonNull(almacen), producto, cantidad, usuario);
 
         return "redirect:/almacenes/" + almacenId;
     }

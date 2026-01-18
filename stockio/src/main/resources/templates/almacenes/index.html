@@ -57,7 +57,8 @@
 
     <h1>Lista de Almacenes</h1>
 
-    <a href="/almacenes/nuevo" class="btn btn-primary">Nuevo Almacén/Registro</a>
+    <a href="/almacenes/nuevo" class="btn btn-primary" sec:authorize="hasAnyRole('ADMIN', 'JEFE_ALMACEN')">Nuevo
+        Almacén/Registro</a>
     <a href="/panel" class="btn">Volver al Panel</a>
 
     <table>
@@ -81,9 +82,11 @@
                 <td class="actions">
                     <a th:href="@{/almacenes/{id}(id=${dto.almacen.id})}" class="btn btn-primary"
                         style="margin-right: 5px;">Entrar</a>
-                    <a th:href="@{/almacenes/editar/{id}(id=${dto.almacen.id})}" class="btn">Editar</a>
+                    <a th:href="@{/almacenes/editar/{id}(id=${dto.almacen.id})}" class="btn"
+                        sec:authorize="hasAnyRole('ADMIN', 'JEFE_ALMACEN')">Editar</a>
                     <a th:href="@{/almacenes/eliminar/{id}(id=${dto.almacen.id})}" class="btn btn-danger"
-                        onclick="return confirm('¿Estás seguro? Se borrará el almacén.');">Eliminar</a>
+                        onclick="return confirm('¿Estás seguro? Se borrará el almacén.');"
+                        sec:authorize="hasAnyRole('ADMIN', 'JEFE_ALMACEN')">Eliminar</a>
                 </td>
             </tr>
         </tbody>

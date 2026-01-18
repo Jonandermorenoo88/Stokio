@@ -27,9 +27,6 @@ public class UsuarioController {
     public String guardarUsuario(@ModelAttribute Usuario usuario, Model model) {
         // No asignamos rol por defecto. El usuario debe esperar a que el admin le
         // asigne uno.
-        // if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
-        // usuario.getRol().add(Role.USUARIO);
-        // }
         try {
             usuarioService.guardarUsuario(usuario);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
@@ -56,8 +53,10 @@ public class UsuarioController {
         Role nuevoRol = null;
         if ("ADMIN".equalsIgnoreCase(rol)) {
             nuevoRol = Role.ADMIN;
-        } else if ("USUARIO".equalsIgnoreCase(rol)) {
-            nuevoRol = Role.USUARIO;
+        } else if ("JEFE_ALMACEN".equalsIgnoreCase(rol)) {
+            nuevoRol = Role.JEFE_ALMACEN;
+        } else if ("AUXILIAR_ALMACEN".equalsIgnoreCase(rol)) {
+            nuevoRol = Role.AUXILIAR_ALMACEN;
         }
 
         if (nuevoRol == null) {
@@ -68,12 +67,18 @@ public class UsuarioController {
         usuario.getRol().clear(); // vaciamos los roles anteriores
         usuario.getRol().add(nuevoRol); // añadimos el nuevo rol
 
-        usuarioService.guardarUsuario(usuario);
+        usuarioService.guardarUsuarioSinEncriptar(usuario);
 
         return "redirect:/usuarios";
     }
 
-    // ELIMINAR
+    // Defensive Handler: Redirigir GET accidental a /actualizarRol (ej: recargar
+    // página) a la lista
+    @GetMapping("/actualizarRol")
+    public String actualizarRolGet() {
+        return "redirect:/usuarios";
+    }
+
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminarUsuario(id);
