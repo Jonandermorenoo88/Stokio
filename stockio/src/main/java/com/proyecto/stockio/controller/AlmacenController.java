@@ -175,13 +175,68 @@ public class AlmacenController {
         return "almacenes/form";
     }
 
+    @Autowired
+    private com.proyecto.stockio.repository.AlbaranRepository albaranRepository;
+
+    @Autowired
+    private com.proyecto.stockio.repository.LineaAlbaranRepository lineaAlbaranRepository;
+
+    @Autowired
+    private com.proyecto.stockio.repository.ProductoRepository productoRepository;
+
     @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/eliminar/{id}")
-    public String eliminarAlmacen(@PathVariable Long id) {
-        // Opcional: Borrar inventario asociado primero o tener CascadeType.REMOVE en la
-        // entidad (no hecho aqui por simplicidad)
+    @org.springframework.transaction.annotation.Transactional
+    public String eliminarAlmacen(@PathVariable Long id,
+            org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+
         java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
-        almacenRepository.deleteById(id);
+        Almacen almacen = almacenRepository.findById(id).orElse(null);
+
+        if (almacen == null) {
+            redirectAttributes.addFlashAttribute("error", "Almacén no encontrado.");
+            return "redirect:/almacenes";
+        }
+
+        try {
+            // 1. Eliminar Inventario asociado
+            List<Inventario> inventarios = inventarioRepository.findByAlmacen(almacen);
+            if (inventarios != null) {
+                inventarioRepository.deleteAll(inventarios);
+            }
+
+            // 2. Eliminar Albaranes y sus Líneas asociados
+            List<com.proyecto.stockio.model.Albaran> albaranes = albaranRepository
+                    .findByAlmacenOrderByFechaDesc(almacen);
+            for (com.proyecto.stockio.model.Albaran albaran : albaranes) {
+                List<com.proyecto.stockio.model.LineaAlbaran> lineas = lineaAlbaranRepository.findByAlbaran(albaran);
+                lineaAlbaranRepository.deleteAll(lineas);
+                albaranRepository.delete(albaran);
+            }
+
+            // 3. Eliminar Categorías asociadas (y desvincular productos)
+            List<Categoria> categorias = categoriaRepository.findByAlmacen(almacen);
+            for (Categoria categoria : categorias) {
+                // Desvincular productos
+                List<Producto> productos = categoria.getProductos();
+                if (productos != null) {
+                    for (Producto producto : productos) {
+                        producto.setCategoria(null);
+                        productoRepository.save(producto);
+                    }
+                }
+                categoriaRepository.delete(categoria);
+            }
+
+            // 4. Finalmente eliminar el almacén
+            almacenRepository.delete(almacen);
+
+            redirectAttributes.addFlashAttribute("msg",
+                    "Almacén eliminado correctamente (y todos sus datos asociados).");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al eliminar el almacén: " + e.getMessage());
+        }
         return "redirect:/almacenes";
     }
 

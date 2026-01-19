@@ -70,10 +70,7 @@
                 <td colspan="5" style="text-align: center;">No hay productos en esta categoría.</td>
             </tr>
             <tr th:each="item : ${productos}">
-                <td>
-                    <a th:href="@{/productos/editar/{id}(id=${item.producto.id})}"
-                        th:text="${item.producto.nombre}"></a>
-                </td>
+                <td th:text="${item.producto.nombre}"></td>
                 <td th:text="${item.cantidad}"></td>
                 <td th:text="${item.producto.precio}"></td>
                 <td th:text="${item.cantidad * (item.producto.precio != null ? item.producto.precio : 0)}"></td>
