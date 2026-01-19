@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,15 @@
 <body>
 
   <header>
+    <div class="header-left">
+      <span>Hola, <strong sec:authentication="name">Usuario</strong></span>
+    </div>
     <h1>Panel de Administración</h1>
+    <div class="header-right">
+      <form th:action="@{/logout}" method="post" style="margin: 0;">
+        <button type="submit" class="logout-btn">Cerrar Sesión</button>
+      </form>
+    </div>
   </header>
 
   <main>
@@ -38,6 +46,9 @@
     </div>
   </main>
 
+  <footer style="text-align: center; margin-top: 20px; color: #777;">
+    <p>&copy; 2026 Stockio - Todos los derechos reservados.</p>
+  </footer>
 </body>
 
 </html>

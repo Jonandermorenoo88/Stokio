@@ -7,18 +7,26 @@
       flex-direction: column;
       min-height: 100vh;
     }
+
     header {
       background-color: #333;
       color: white;
       padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+
     h1 {
       margin: 0;
       font-weight: 300;
       letter-spacing: 1px;
+      flex: 2;
+      /* Center element takes more space */
+      text-align: center;
     }
+
     main {
       flex: 1;
       max-width: 900px;
@@ -26,51 +34,60 @@
       padding: 20px;
       width: 90%;
     }
+
     h2 {
       text-align: center;
       color: #333;
       margin-bottom: 10px;
     }
+
     p {
       text-align: center;
       color: #666;
       margin-bottom: 30px;
     }
+
     .panel {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 30px;
     }
+
     .card {
       flex: 1 1 300px;
       background-color: white;
       border-radius: 12px;
       text-align: center;
       padding: 40px 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
       border: 1px solid #eee;
     }
+
     .card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
       border-color: #ddd;
     }
+
     .card h3 {
       color: #2c3e50;
       margin-top: 0;
     }
+
     .card p {
       text-align: center;
       font-size: 0.9em;
       margin-bottom: 25px;
     }
+
     a.button {
       display: block;
       width: 80%;
       margin: 10px auto;
-      background-color: #45a049; /* Matching index.css green */
+      background-color: #45a049;
+      /* Matching index.css green */
       color: white;
       text-decoration: none;
       padding: 12px 20px;
@@ -78,13 +95,65 @@
       font-weight: 600;
       transition: background-color 0.2s;
     }
+
     a.button:hover {
       background-color: #3d8b40;
     }
-    
+
     /* Responsive adjustments */
     @media (max-width: 600px) {
       .card {
         flex: 1 1 100%;
+      }
+    }
+
+    /* Header Layout */
+    /* Header Layout */
+    .header-left {
+      flex: 1;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    .header-right {
+      flex: 1;
+      text-align: right;
+    }
+
+    .logout-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .logout-btn:hover {
+      background-color: #c0392b;
+    }
+
+    /* Adjust for mobile */
+    @media (max-width: 768px) {
+      header {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding-bottom: 15px;
+      }
+
+      .header-left,
+      .header-right {
+        position: static;
+        transform: none;
+        display: block;
+      }
+
+      h1 {
+        order: -1;
+        /* Ensure title stays on top */
       }
     }
