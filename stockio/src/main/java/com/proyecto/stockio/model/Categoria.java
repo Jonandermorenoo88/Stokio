@@ -17,6 +17,10 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria")
     private List<Producto> productos;
 
+    @ManyToOne
+    @JoinColumn(name = "almacen_id")
+    private Almacen almacen;
+
     public Categoria() {
     }
 
@@ -46,5 +50,13 @@ public class Categoria {
 
     public void setProductos(List<Producto> productos) {
         this.productos = productos;
+    }
+
+    public Almacen getAlmacen() {
+        return almacen;
+    }
+
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
     }
 }

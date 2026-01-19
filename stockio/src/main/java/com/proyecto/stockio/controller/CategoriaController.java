@@ -14,6 +14,9 @@ public class CategoriaController {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
+    @Autowired
+    private com.proyecto.stockio.repository.AlmacenRepository almacenRepository;
+
     @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/nueva")
     public String nuevaCategoria(@RequestParam(required = false) Long almacenId, Model model) {
@@ -28,9 +31,14 @@ public class CategoriaController {
             @RequestParam(required = false) Long almacenId,
             Model model) {
         try {
+            if (almacenId != null) {
+                com.proyecto.stockio.model.Almacen almacen = almacenRepository.findById(almacenId)
+                        .orElseThrow(() -> new IllegalArgumentException("Almacén inválido"));
+                categoria.setAlmacen(almacen);
+            }
             categoriaRepository.save(java.util.Objects.requireNonNull(categoria, "La categoría no puede ser nula"));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            model.addAttribute("error", "Error: Ya existe una categoría con ese nombre.");
+            model.addAttribute("error", "Error: Ya existe una categoría con ese nombre en este contexto.");
             model.addAttribute("almacenId", almacenId);
             return "categorias/form";
         } catch (Exception e) {

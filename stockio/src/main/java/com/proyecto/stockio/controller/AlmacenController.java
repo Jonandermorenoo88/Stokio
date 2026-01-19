@@ -71,8 +71,8 @@ public class AlmacenController {
 
         List<Inventario> inventario = inventarioRepository.findByAlmacen(almacen);
 
-        // Obtener TODAS las categorías del sistema
-        List<Categoria> todasLasCategorias = categoriaRepository.findAll();
+        // Obtener solo las categorías asociadas a este almacén
+        List<Categoria> todasLasCategorias = categoriaRepository.findByAlmacen(almacen);
 
         // Calcular totales para cada categoría en ESTE almacén
         List<CategoriaDTO> categoriasDTO = todasLasCategorias.stream().map(cat -> {
