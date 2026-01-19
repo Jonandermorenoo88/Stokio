@@ -47,8 +47,27 @@ public class InicioController {
         }
     }
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.proyecto.stockio.service.UsuarioService usuarioService;
+
     @GetMapping("/registro")
     public String registro() {
         return "registro"; // templates/registro.html
+    }
+
+    @org.springframework.web.bind.annotation.PostMapping("/registro")
+    public String registrarUsuario(
+            @org.springframework.web.bind.annotation.ModelAttribute com.proyecto.stockio.model.Usuario usuario,
+            org.springframework.ui.Model model) {
+        try {
+            usuarioService.guardarUsuario(usuario);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            model.addAttribute("error", "Error: El correo electrónico ya está registrado.");
+            return "registro";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al registrar el usuario: " + e.getMessage());
+            return "registro";
+        }
+        return "redirect:/login?registrado";
     }
 }
