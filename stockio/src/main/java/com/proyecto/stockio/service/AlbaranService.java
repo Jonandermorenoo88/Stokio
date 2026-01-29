@@ -65,13 +65,7 @@ public class AlbaranService {
                 .orElseThrow(() -> new IllegalArgumentException("No hay stock de este producto en el almacén"));
 
         if (inventario.getCantidad() < cantidad) {
-            throw new IllegalArgumentException("Stock insuficiente. Disponible: " + inventario.getCantidad()); // TODO:
-                                                                                                               // Manejar
-                                                                                                               // mejor
-                                                                                                               // la
-                                                                                                               // excepción
-                                                                                                               // en la
-                                                                                                               // vista
+            throw new IllegalArgumentException("Stock insuficiente. Disponible: " + inventario.getCantidad());
         }
 
         // 2. Crear Albarán Header

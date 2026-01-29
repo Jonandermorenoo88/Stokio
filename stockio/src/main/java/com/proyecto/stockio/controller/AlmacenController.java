@@ -200,22 +200,22 @@ public class AlmacenController {
 
         try {
             // 1. Eliminar Inventario asociado
-            List<Inventario> inventarios = inventarioRepository.findByAlmacen(almacen);
-            if (inventarios != null) {
-                inventarioRepository.deleteAll(inventarios);
-            }
+            List<Inventario> inventarios = inventarioRepository
+                    .findByAlmacen(java.util.Objects.requireNonNull(almacen));
+            inventarioRepository.deleteAll(inventarios);
 
             // 2. Eliminar Albaranes y sus Líneas asociados
             List<com.proyecto.stockio.model.Albaran> albaranes = albaranRepository
-                    .findByAlmacenOrderByFechaDesc(almacen);
+                    .findByAlmacenOrderByFechaDesc(java.util.Objects.requireNonNull(almacen));
             for (com.proyecto.stockio.model.Albaran albaran : albaranes) {
-                List<com.proyecto.stockio.model.LineaAlbaran> lineas = lineaAlbaranRepository.findByAlbaran(albaran);
+                List<com.proyecto.stockio.model.LineaAlbaran> lineas = lineaAlbaranRepository
+                        .findByAlbaran(java.util.Objects.requireNonNull(albaran));
                 lineaAlbaranRepository.deleteAll(lineas);
-                albaranRepository.delete(albaran);
+                albaranRepository.delete(java.util.Objects.requireNonNull(albaran));
             }
 
             // 3. Eliminar Categorías asociadas (y desvincular productos)
-            List<Categoria> categorias = categoriaRepository.findByAlmacen(almacen);
+            List<Categoria> categorias = categoriaRepository.findByAlmacen(java.util.Objects.requireNonNull(almacen));
             for (Categoria categoria : categorias) {
                 // Desvincular productos
                 List<Producto> productos = categoria.getProductos();
@@ -229,7 +229,7 @@ public class AlmacenController {
             }
 
             // 4. Finalmente eliminar el almacén
-            almacenRepository.delete(almacen);
+            almacenRepository.delete(java.util.Objects.requireNonNull(almacen));
 
             redirectAttributes.addFlashAttribute("msg",
                     "Almacén eliminado correctamente (y todos sus datos asociados).");

@@ -67,9 +67,6 @@ public class CategoriaController {
     @org.springframework.security.access.prepost.PreAuthorize("hasAnyRole('ADMIN', 'JEFE_ALMACEN')")
     @GetMapping("/eliminar/{id}")
     public String eliminarCategoria(@PathVariable Long id, @RequestParam(required = false) Long almacenId) {
-        // TODO: Comprobar si hay productos en esta categoría antes de borrar para
-        // evitar error de FK
-        // O dejar que falle y capturar la excepción
         try {
             java.util.Objects.requireNonNull(id, "El ID no puede ser nulo");
             categoriaRepository.deleteById(id);

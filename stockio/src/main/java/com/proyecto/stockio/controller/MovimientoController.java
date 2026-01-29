@@ -87,9 +87,6 @@ public class MovimientoController {
     @GetMapping("/ventas/nueva")
     public String nuevaVenta(Model model) {
         model.addAttribute("almacenes", almacenRepository.findAll());
-        // En ventas, idealmente filtramos productos con stock, pero por simplicidad
-        // mostramos todos
-        // y validamos en el backend o usamos JS para filtrar por almacén (TODO para V2)
         model.addAttribute("productos", productoService.listarProductos());
         return "movimientos/venta";
     }
